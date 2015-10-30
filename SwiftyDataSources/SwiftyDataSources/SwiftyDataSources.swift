@@ -59,13 +59,13 @@ public extension DataSource
     }
 }
 
-public class TableViewDataSource <T, U:SwiftyCellProtocol> : NSObject, DataSource, UITableViewDataSource
+public class TableViewDataSource <T, CellType:SwiftyCellProtocol> : NSObject, DataSource, UITableViewDataSource
 {
     //Items container
     public private(set) var items:Array<T>
     
     //Cell Setup
-    public var cellSetupHandler: ((T, U, NSIndexPath) -> ())?
+    public var cellSetupHandler: ((T, CellType, NSIndexPath) -> ())?
     public let tableView:UITableView
     
     //MARK: Initializer
@@ -94,14 +94,14 @@ public class TableViewDataSource <T, U:SwiftyCellProtocol> : NSObject, DataSourc
     
     @objc public  func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
-        let cellClass = U.cellIdentifier()
+        let cellClass = CellType.cellIdentifier()
         let cell = tableView.dequeueReusableCellWithIdentifier(cellClass)
         let model = self.objectAtIndexPath(indexPath)
         
         /* Setup the cell */
         if let cellSetupHandler = cellSetupHandler
         {
-            cellSetupHandler(model, cell as! U, indexPath)
+            cellSetupHandler(model, cell as! CellType, indexPath)
         }
         
         return cell!
